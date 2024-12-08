@@ -1,15 +1,15 @@
 import run from "aocrunner"
 
 const parseInput = (rawInput: string) => {
-  const multiplierExpression = /mul\(\d+,\d+\)/g
-
-  return rawInput.match(multiplierExpression)
+  return rawInput
 }
 
 const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput) as string[]
+  const multiplierExpression = /mul\(\d+,\d+\)/g
 
-  const results = input.map((v) => {
+  const multipliers = rawInput.match(multiplierExpression) as string[]
+
+  const results = multipliers.map((v) => {
     const numbers = v.match(/\d+/g) as string[]
     return Number(numbers[0]) * Number(numbers[1])
   })
@@ -21,7 +21,10 @@ const part1 = (rawInput: string) => {
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput)
 
-  return
+  const reDontDo = /don't\(\)((.|\n)*?do\(\)|.*)/g
+  const onlyEnabledInstructions = input.replaceAll(reDontDo, "")
+
+  return part1(onlyEnabledInstructions)
 }
 
 run({
@@ -36,10 +39,10 @@ run({
   },
   part2: {
     tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
+      {
+        input: `xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`,
+        expected: 48,
+      },
     ],
     solution: part2,
   },
